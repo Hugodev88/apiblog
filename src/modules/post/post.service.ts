@@ -3,25 +3,53 @@ import { prisma } from "../../lib/prisma";
 
 export const postService = {
 
-    async list(){
-        const posts = await prisma.post.findMany()
-        return posts
-    },
+    async list() {
+        const posts = await prisma.post.findMany({
+            select: {
+                id: true,
+                title: true,
+                content: true,
+                createdAt: true,
+                author: {
+                    select: {
+                    name: true,
+                    },
+                },
+                _count: {
+                    select: {
+                    comments: true,
+                    },
+                },
+            },
+        });
+
+        return posts;
+        },
 
     async findbyId(postId: string){
         const post = await prisma.post.findUnique({
-            where: {
-                id: postId,
-            },
+            where: { id: postId },
             select: {
+                id: true,
                 title: true,
                 content: true,
                 author: {
-                    select: {
+                    select: { 
                         name: true,
-                    }
-                }
-            }
+                        id: true, 
+                    },
+                },
+                comments: {
+                    select: {
+                        content: true,
+                        user: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
         });
 
         if (!post) {
