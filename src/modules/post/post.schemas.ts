@@ -9,3 +9,5 @@ export const createPostSchema = z.object({
     .string()
     .min(10, "Content must have at least 10 characters"),
 });
+
+export const updatePostSchema = createPostSchema.partial();

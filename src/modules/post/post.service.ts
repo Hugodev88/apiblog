@@ -1,24 +1,94 @@
+import { AppError } from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
 
 export const postService = {
-    async create(data: {
-        title: string;
-        content: string;
-        authorId: string;
-    }) {
+
+    async list(){
+        const posts = await prisma.post.findMany()
+        return posts
+    },
+
+    async findbyId(postId: string){
+        const post = await prisma.post.findUnique({
+            where: {
+                id: postId,
+            },
+            select: {
+                title: true,
+                content: true,
+                author: {
+                    select: {
+                        name: true,
+                    }
+                }
+            }
+        });
+
+        if (!post) {
+            throw new AppError("Post not found", 404);
+        }
+
+        return post
+    },
+
+    async create(data: {title: string;content: string;authorId: string;}) {
         const post = await prisma.post.create({
-        data: {
-            title: data.title,
-            content: data.content,
-            authorId: data.authorId,
-        },
+            data: {
+                title: data.title,
+                content: data.content,
+                authorId: data.authorId,
+            },
         });
 
         return post;
     },
 
-    async list(){
-        const posts = await prisma.post.findMany()
-        return posts
-    }
+    async update(postId: string, data: {title?: string; content?: string; authorId: string;}){
+        const post = await prisma.post.findUnique({
+            where: {
+                id: postId,
+            }
+        })
+
+        if(!post) {
+            throw new AppError("Post not found", 404);
+        }
+
+        if(post.authorId !== data.authorId){
+            throw new AppError("You are not allowed to edit this post", 403);
+        }
+
+        return prisma.post.update({
+            where: {
+                id: postId,
+                },
+            data: {
+                title: data.title,
+                content: data.content,
+            },
+        });
+    },
+
+    async delete(postId: string, userId: string){
+        const post = await prisma.post.findUnique({
+            where: {
+                id: postId,
+            },
+        });
+
+        if (!post) {
+            throw new AppError("Post not found", 404);
+        }
+
+        if (post.authorId !== userId) {
+            throw new AppError("You are not allowed to delete this post", 403);
+        }
+
+        await prisma.post.delete({
+            where: {
+                id: postId,
+            },
+        });
+    },   
+    
 };
