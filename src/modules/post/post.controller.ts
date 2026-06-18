@@ -8,9 +8,17 @@ type PostParams = {
 
 export const postController = {
 
-    async listPosts(req: Request, res: Response) {
-        const posts = await postService.list()
-        res.json(posts)
+    async listPosts(req: Request, res: Response, next: NextFunction) {
+        try {
+            const cursor = req.query.cursor as string | undefined
+            const limit = Number(req.query.limit) || 10
+
+            const result = await postService.list(cursor, limit);
+
+            return res.json(result);
+        } catch (error) {
+            next(error);
+        }
     },
 
     async getById(req: Request<PostParams>, res: Response, next: NextFunction) {

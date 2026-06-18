@@ -7,3 +7,5 @@ export const commentRoutes = Router()
 commentRoutes.get('/', commentController.listComments)
 
 commentRoutes.post('/', authMiddleware, commentController.createComment)
+commentRoutes.patch("/:id", authMiddleware, commentController.updateComment);
+commentRoutes.delete("/:id", authMiddleware, commentController.deleteComment)

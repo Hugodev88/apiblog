@@ -32,6 +32,60 @@ export const commentService = {
         })
 
         return comment
-    }
+    },
+
+    async update(commentId: string, userId: string, data: { content: string }) {
+        const comment = await prisma.comment.findUnique({
+            where: {
+            id: commentId,
+            },
+        });
+
+        if (!comment) {
+            throw new AppError("Comment not found", 404);
+        }
+
+        if (comment.userId !== userId) {
+            throw new AppError("You are not allowed to edit this comment", 403);
+        }
+
+        const updatedComment = await prisma.comment.update({
+            where: {
+                id: commentId,
+            },
+            data: {
+                content: data.content,
+            },
+            select: {
+                id: true,
+                content: true,
+            },
+        });
+
+        return updatedComment;
+    },
+
+    async delete(commentId: string, userId: string){
+        const comment = await prisma.comment.findUnique({
+            where: {
+                id: commentId,
+            },
+        });
+
+        if (!comment) {
+            throw new AppError("Comment not found", 404);
+        }
+
+        if (comment.userId !== userId) {
+            throw new AppError("You are not allowed to delete this post", 403);
+        }
+
+        await prisma.comment.delete({
+            where: {
+                id: commentId,
+            },
+        });
+    },
+    
 
 }
