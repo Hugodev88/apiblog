@@ -32,6 +32,7 @@ export const postService = {
                 _count: {
                     select: {
                         comments: true,
+                        likes: true,
                     },
                 },
             },
@@ -41,12 +42,13 @@ export const postService = {
 
         return {
             data: posts.map((post) => ({
-            id: post.id,
-            title: post.title,
-            content: post.content,
-            createdAt: post.createdAt,
-            author: post.author,
-            commentsCount: post._count.comments,
+                id: post.id,
+                title: post.title,
+                content: post.content,
+                createdAt: post.createdAt,
+                author: post.author,
+                commentsCount: post._count.comments,
+                likesCount: post._count.likes,
             })),
 
             nextCursor: lastPost?.id || null,
