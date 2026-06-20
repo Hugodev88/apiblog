@@ -14,8 +14,4 @@ export const userService = {
 		);
 	},
 
-	async edit(){
-
-	},
-
 };
