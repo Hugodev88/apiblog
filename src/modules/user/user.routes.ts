@@ -6,6 +6,7 @@ import { followController } from "../follow/follow.controller";
 export const userRoutes = Router();
 
 userRoutes.get("/", userController.listUsers);
+userRoutes.get("/:id", authMiddleware, userController.getUserById);
 
 // follow
 
