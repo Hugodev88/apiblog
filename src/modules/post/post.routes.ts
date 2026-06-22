@@ -5,7 +5,7 @@ import { likeController } from "../like/like.controller";
 
 export const postRoutes = Router()
 
-postRoutes.get('/', postController.listPosts)
+postRoutes.get('/', authMiddleware ,postController.listPosts)
 postRoutes.get("/:id", postController.getById)
 
 postRoutes.post("/",authMiddleware, postController.createPost);

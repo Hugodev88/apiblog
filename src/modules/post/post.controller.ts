@@ -10,10 +10,12 @@ export const postController = {
 
     async listPosts(req: Request, res: Response, next: NextFunction) {
         try {
+            const userId = req.userId
             const cursor = req.query.cursor as string | undefined
             const limit = Number(req.query.limit) || 10
+            const sort = req.query.sort as string | undefined;
 
-            const result = await postService.list(cursor, limit);
+            const result = await postService.list({userId, cursor, limit, sort});
 
             return res.json(result);
         } catch (error) {
