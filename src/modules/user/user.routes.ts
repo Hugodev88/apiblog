@@ -9,5 +9,8 @@ userRoutes.get("/", userController.listUsers);
 
 // follow
 
+userRoutes.get("/:id/followers", followController.listFollowers)
+userRoutes.get("/:id/following", followController.listFollowing)
+
 userRoutes.post("/:id/follow", authMiddleware, followController.followUser)
 userRoutes.delete("/:id/follow", authMiddleware, followController.unfollowUser)

@@ -49,6 +49,43 @@ export const followService = {
         });
 
         return { unfollowing: true };
-    }
-    
+    },
+
+    async listFollowers(userId: string) {
+
+        const followers = await prisma.follow.findMany({
+            where: {
+                followingId: userId,
+            },
+            select: {
+                follower: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
+        });
+
+        return followers
+    },
+
+    async listFollowing(userId: string) {
+
+        const followers = await prisma.follow.findMany({
+            where: {
+                followerId: userId,
+            },
+            select: {
+                following: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
+        });
+
+        return followers
+    },
 }
