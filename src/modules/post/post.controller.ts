@@ -90,4 +90,14 @@ export const postController = {
             next(error);
         }
     },
+
+    async listFeed(req: Request<PostParams>, res: Response, next: NextFunction){
+        try {
+            const userId = req.userId
+            const result = await postService.feed(userId)
+            return res.json(result);
+        } catch (error) {
+            next(error)
+        }
+    }
 };

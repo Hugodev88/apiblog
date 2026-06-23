@@ -5,6 +5,7 @@ import { likeController } from "../like/like.controller";
 
 export const postRoutes = Router()
 
+postRoutes.get('/feed', authMiddleware, postController.listFeed)
 postRoutes.get('/', authMiddleware ,postController.listPosts)
 postRoutes.get("/:id", postController.getById)
 
@@ -16,3 +17,5 @@ postRoutes.delete("/:id", authMiddleware, postController.deletePost)
 
 postRoutes.post("/:id/like", authMiddleware, likeController.likePost);
 postRoutes.delete("/:id/like", authMiddleware, likeController.unlikePost);
+
+// feed
